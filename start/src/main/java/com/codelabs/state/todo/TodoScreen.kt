@@ -54,9 +54,10 @@ fun TodoScreen(
     onRemoveItem: (TodoItem) -> Unit
 ) {
     Column {
-        TodoItemInputBackground(elevate = true,
+        TodoItemInputBackground(
+            elevate = true,
             modifier = Modifier.fillMaxWidth()
-        ){
+        ) {
             TodoItemInput(onItemComplete = onAddItem)
         }
         LazyColumn(
@@ -118,27 +119,36 @@ private fun randomTint(): Float {
 }
 
 @Composable
-fun ToDoInputTextField(modifier: Modifier){
-    val (text, setText) = remember{ mutableStateOf("")}
-    TodoInputText(text = text, setText, modifier) {
-        
+fun ToDoInputTextField(text: String, onTextChange: (String) -> Unit, modifier: Modifier) {
+    TodoInputText(text = text, onTextChange, modifier) {
+
     }
 }
 
 @Composable
-fun TodoItemInput(onItemComplete: (TodoItem) -> Unit){
-    Column{
+fun TodoItemInput(onItemComplete: (TodoItem) -> Unit) {
+    val (text, setText) = remember { mutableStateOf("") }
+    Column {
         Row(
             Modifier
                 .padding(horizontal = 16.dp)
                 .padding(top = 16.dp)
-        ){
-            ToDoInputTextField(modifier = Modifier
-                .weight(1f)
-                .padding(end = 8.dp)
+        ) {
+            ToDoInputTextField(
+                text = text,
+                onTextChange = setText,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp)
             )
-            TodoEditButton(onClick = { /*TODO*/ }, text = "Add",
-            modifier = Modifier.align(Alignment.CenterVertically)
+            TodoEditButton(
+                onClick = {
+                    onItemComplete(TodoItem(text))
+                    setText("")
+                },
+                text = "Add",
+                modifier = Modifier.align(Alignment.CenterVertically),
+                enabled = text.isNotBlank()
             )
         }
     }
