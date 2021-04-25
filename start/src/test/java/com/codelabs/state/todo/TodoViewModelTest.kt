@@ -16,6 +16,70 @@
 
 package com.codelabs.state.todo
 
+import com.codelabs.state.util.generateRandomTodoItem
+import com.google.common.truth.Truth.assertThat
+import org.junit.Test
+
 class TodoViewModelTest {
-    // TODO: Write tests
+
+    @Test
+    fun whenAddingItem_updatesList(){
+        //given
+        val viewModel = TodoViewModel()
+        //when: new item added
+        val item1 = generateRandomTodoItem()
+        viewModel.addItem(item1)
+        //then
+        assertThat(viewModel.todoItems).isEqualTo(listOf(item1))
+    }
+
+    @Test
+    fun whenRemovingItem_updatesList(){
+        //given
+        val viewModel = TodoViewModel()
+        val item1 = generateRandomTodoItem()
+        val item2 = generateRandomTodoItem()
+        viewModel.addItem(item1)
+        viewModel.addItem(item2)
+
+        //when
+        viewModel.removeItem(item1)
+
+        //then
+        assertThat(viewModel.todoItems).isEqualTo(listOf(item2))
+    }
+
+    @Test
+    fun whenEditing_currentItemUpdates(){
+        //given
+        val viewModel = TodoViewModel()
+        val item1 = generateRandomTodoItem()
+        val item2 = generateRandomTodoItem()
+        viewModel.addItem(item1)
+        viewModel.addItem(item2)
+        //when
+        val expected = item1.copy(task = "new task")
+        viewModel.onEditItemSelected(item1)
+        viewModel.onEditItemChange(expected)
+        //then
+        assertThat(viewModel.todoItems).isEqualTo(listOf(expected, item2))
+    }
+
+    @Test
+    fun whenEditDone_currentItemNull(){
+        //given
+        val viewModel = TodoViewModel()
+        val item1 = generateRandomTodoItem()
+        val item2 = generateRandomTodoItem()
+        viewModel.addItem(item1)
+        viewModel.addItem(item2)
+        //when
+        val expected = item1.copy(task = "new task")
+        viewModel.onEditItemSelected(item1)
+        viewModel.onEditItemChange(expected)
+        viewModel.onEditDone()
+        //then
+        assertThat(viewModel.currentEditItem).isEqualTo(null)
+    }
+
 }

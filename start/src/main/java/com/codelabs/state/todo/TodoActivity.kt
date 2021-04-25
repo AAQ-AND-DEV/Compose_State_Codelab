@@ -43,11 +43,11 @@ class TodoActivity : AppCompatActivity() {
 
     @Composable
     fun TodoActivityScreen(vm: TodoViewModel){
-        //by automatically unwraps State<type> to regular type
-        //State vals can be used by Compose to trigger recomposition
-        val items : List<TodoItem> by vm.todoItems.observeAsState(listOf())
+//        //by automatically unwraps State<type> to regular type
+//        //State vals can be used by Compose to trigger recomposition
+//        val items : List<TodoItem> by vm.todoItems.observeAsState(listOf())
         TodoScreen(
-            items = items,
+            items = vm.todoItems,
             onAddItem = {vm.addItem(it)},
             onRemoveItem = {vm.removeItem(it)}
         )
